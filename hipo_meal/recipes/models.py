@@ -11,3 +11,6 @@ class Recipe(models.Model):
     vote_count = models.IntegerField(default=0)
     like_count = models.IntegerField(default=0)
     # Maybe add an image field here.
+
+    def __str__(self):
+        return self.title
