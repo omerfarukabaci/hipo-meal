@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% if title %}
+        <title>Hipo-Meal | {{ title }}</title>
+    {% else %}
+        <title>Hipo-Meal</title>
+    {% endif %}
+</head>
+<body>
+    {% block content %}
+    {% endblock content%}
+</body>
+</html>
