@@ -4,12 +4,29 @@
 {% block content %}
     <div class="content-section">
         <div class="media">
-            <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
+            <img class="rounded-circle thumbnail mr-4 mb-2" src="{{ user.profile.image.url }}">
             <div class="media-body">
                 <h2 class="mt-4 account-heading">{{ user.username }}</h2>
                 <p class="text-secondary">{{ user.email }}</p>
             </div>
         </div>
-        <!-- FORM HERE -->
+        <div class="content-section">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Profile Info</legend>
+                    {{ user_form|crispy }}
+                    {{ profile_form|crispy }}
+                </fieldset>
+                <div class="form-group">
+                    <button class="btn btn-outline-info" , type="submit">Update</button>
+                </div>
+            </form>
+            <div class="border-top pt-3">
+                <small class="text-muted">
+                    Do you have an account?<a class="ml-2" href="{% url 'login' %}">Login</a>
+                </small>
+            </div>
+        </div>
     </div>
 {% endblock content %}
