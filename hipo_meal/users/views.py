@@ -9,7 +9,7 @@ def register(request):
             registration_form.save()
             username = registration_form.cleaned_data.get('username')
             messages.success(request, f'Welcome to our world {username}!')
-            return redirect('recipes-home')
+            return redirect('login')
 
     else:
         registration_form = UserRegisterForm()
