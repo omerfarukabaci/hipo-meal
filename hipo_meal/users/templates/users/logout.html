@@ -1,0 +1,12 @@
+{% extends "recipes/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h2>See you soon!</h2>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            <a class="ml-2" href="{% url 'login' %}">Login</a> again or go to the
+            <a href="{% url 'recipes-home' %}">Home Page.</a>
+        </small>
+    </div>
+{% endblock content %}
