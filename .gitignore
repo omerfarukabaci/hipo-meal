@@ -126,3 +126,7 @@ dmypy.json
 .vscode/settings.json
 !.vscode/tasks.json
 !.vscode/extensions.json
+
+# Custom ignores
+
+/hipo_meal/media/*
