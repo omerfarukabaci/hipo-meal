@@ -4,6 +4,7 @@
     {% for recipe in recipes %}
         <h1>{{ recipe.title }}</h1>
         <p>{{ recipe.content }}</p>
-        <p>By {{ recipe.author }} on {{ recipe.date_posted|date:"F d, Y" }}</p>
+        <p>By <img src="{{ recipe.author.profile.image.url }}" class="rounded-circle thumbnail mb-1" style="height: 20px; width: 20px;">
+            {{ recipe.author }} on {{ recipe.date_posted|date:"F d, Y" }}</p>
     {% endfor %}
 {% endblock content %}
