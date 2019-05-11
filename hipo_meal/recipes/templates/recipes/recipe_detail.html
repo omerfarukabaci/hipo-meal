@@ -1,6 +1,30 @@
 {% extends "recipes/base.html" %}
 
 {% block content %}
+    <script>
+        function evaluateRecipe(voteOrLike){
+            $.ajax({
+                url: window.location.pathname + 'evaluate/',
+                data: {
+                'vote_or_like': voteOrLike,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                },
+                method: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data)
+                    console.log(data.updated_like_count)
+                    if(voteOrLike == "like"){
+                        $("#like-count").html(data["updated_like_count"]);
+                    }
+                    else{
+                        $("#vote-count").html('(' + data["updated_vote_count"] + ')');
+                        $("#vote-ratio").html(data["updated_vote_ratio"] + '/5');
+                    }
+                }
+            });
+        }
+    </script>
     <div class="card">
         <img class="card-img-top" src="{{ recipe.image.url }}">
         <div class="card-body">
@@ -13,23 +37,27 @@
                         style="height: 20px; width: 20px;">
                     {{ object.author }} on {{ object.date_posted|date:"F d, Y" }}
                 </small>
-                <div href="{% url 'recipe-update' object.id %}"
-                class="btn btn-info btn-sm my-1 ml-2"
-                style="cursor: pointer;"
-                onclick="">
-                    Like <div class="bg-light text-dark">{{ object.like_count }}</div>
-                </div>
-                <div style="cursor: pointer;" class="btn btn-info btn-sm"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Vote ({{ object.vote_count }}) <div class="bg-light text-dark">{% widthratio object.vote_points object.vote_count 1 %}/5</div>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">1</a>
-                        <a class="dropdown-item" href="#">2</a>
-                        <a class="dropdown-item" href="#">3</a>
-                        <a class="dropdown-item" href="#">4</a>
-                        <a class="dropdown-item" href="#">5</a>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div href="{% url 'recipe-update' object.id %}"
+                    class="btn btn-info btn-sm my-1 ml-2" onclick="evaluateRecipe('like');"
+                    style="cursor: pointer;"
+                    onclick="">
+                        Like <div class="bg-light text-dark" id="like-count">{{ object.like_count }}</div>
                     </div>
-                </div>
+                    <div style="cursor: pointer;" class="btn btn-info btn-sm"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Vote <div class="d-inline" id="vote-count">({{ object.vote_count }})</div><div class="bg-light text-dark" id="vote-ratio">{% widthratio object.vote_points object.vote_count 1 %}/5</div>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" onclick="evaluateRecipe('vote_1');">1</a>
+                            <a class="dropdown-item" onclick="evaluateRecipe('vote_2');">2</a>
+                            <a class="dropdown-item" onclick="evaluateRecipe('vote_3');">3</a>
+                            <a class="dropdown-item" onclick="evaluateRecipe('vote_4');">4</a>
+                            <a class="dropdown-item" onclick="evaluateRecipe('vote_5');">5</a>
+                        </div>
+                    </div>
+                </form>
+
                 {% if object.author == user %}
                     <a href="{% url 'recipe-delete' object.id %}"
                     class="btn btn-danger btn-sm my-1 ml-2 float-right">
