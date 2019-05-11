@@ -13,13 +13,30 @@
                         style="height: 20px; width: 20px;">
                     {{ object.author }} on {{ object.date_posted|date:"F d, Y" }}
                 </small>
+                <div href="{% url 'recipe-update' object.id %}"
+                class="btn btn-info btn-sm my-1 ml-2"
+                style="cursor: pointer;"
+                onclick="">
+                    Like <div class="bg-light text-dark">{{ object.like_count }}</div>
+                </div>
+                <div style="cursor: pointer;" class="btn btn-info btn-sm"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Vote ({{ object.vote_count }}) <div class="bg-light text-dark">{% widthratio object.vote_points object.vote_count 1 %}/5</div>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">1</a>
+                        <a class="dropdown-item" href="#">2</a>
+                        <a class="dropdown-item" href="#">3</a>
+                        <a class="dropdown-item" href="#">4</a>
+                        <a class="dropdown-item" href="#">5</a>
+                    </div>
+                </div>
                 {% if object.author == user %}
                     <a href="{% url 'recipe-delete' object.id %}"
                     class="btn btn-danger btn-sm my-1 ml-2 float-right">
                     Delete
                     </a>
                     <a href="{% url 'recipe-update' object.id %}"
-                    class="btn btn-info btn-sm my-1 float-right">
+                    class="btn btn-warning btn-sm my-1 float-right ml-2">
                     Update
                     </a>
                 {% endif%}
