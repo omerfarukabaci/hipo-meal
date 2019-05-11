@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Recipe
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from .models import Recipe, Evalutation
 
 class RecipeListView(ListView):
     model = Recipe
@@ -48,3 +50,64 @@ class RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         else:
             return False
+
+@login_required
+def evaluate_recipe(request, pk):
+    response_data = dict()
+    if request.method == 'POST':
+        recipe = Recipe.objects.filter(pk=pk).first()
+        user = request.user
+        evaluation = Evalutation.objects.filter(user=user, recipe=recipe).first()
+        if evaluation:
+            if request.POST['vote_or_like'] == 'like':
+                if evaluation.recipce_is_liked:
+                    evaluation.recipce_is_liked = False
+                    recipe.like_count -= 1
+                    recipe.save()
+                    evaluation.save()
+                    response_data = {
+                        "updated_like_count": recipe.like_count
+                    }
+                else:
+                    evaluation.recipce_is_liked = True
+                    recipe.like_count += 1
+                    recipe.save()
+                    evaluation.save()
+                    response_data = {
+                        "updated_like_count": recipe.like_count
+                    }
+            elif 'vote' in request.POST['vote_or_like']:
+                vote = int(request.POST['vote_or_like'].split("_", 1)[1])
+                old_vote = evaluation.recipe_vote
+                if old_vote == 0:
+                    recipe.vote_count += 1
+                evaluation.recipe_vote = vote
+                recipe.vote_points -= old_vote
+                recipe.vote_points += vote
+                recipe.save()
+                evaluation.save()
+                response_data = {
+                    "updated_vote_count": recipe.vote_count,
+                    "updated_vote_ratio": int(recipe.vote_points/recipe.vote_count)
+                }
+        else:
+            if request.POST['vote_or_like'] == 'like':
+                evaluation = Evalutation(user=user, recipe=recipe, recipce_is_liked=True)
+                recipe.like_count += 1
+                recipe.save()
+                evaluation.save()
+                response_data = {
+                    "updated_like_count": recipe.like_count
+                }
+            elif 'vote' in request.POST['vote_or_like']:
+                vote = int(request.POST['vote_or_like'].split("_", 1)[1])
+                evaluation = Evalutation(user=user, recipe=recipe, recipe_vote=vote)
+                recipe.vote_points += vote
+                recipe.vote_count += 1
+                recipe.save()
+                evaluation.save()
+                response_data = {
+                    "updated_vote_count": recipe.vote_count,
+                    "updated_vote_ratio": int(recipe.vote_points/recipe.vote_count)
+                }
+        return JsonResponse(response_data)
