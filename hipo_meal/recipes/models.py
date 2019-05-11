@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.core.validators import MaxValueValidator, MinValueValidator
 from PIL import Image, ImageOps
 
 class Recipe(models.Model):
@@ -25,3 +26,19 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
+
+class Evalutation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    recipce_is_liked = models.BooleanField(default=False)
+    recipe_vote = models.IntegerField(default=0, validators=[
+        MaxValueValidator(5),
+        MinValueValidator(0)
+    ])
+    date = models.DateTimeField(default=timezone.localtime)
+
+    class Meta:
+        unique_together = ("user", "recipe")
+
+    def __str__(self):
+        return str(self.user) + ':' + str(self.recipe) + ':Liked=' + str(self.recipce_is_liked) + ':Vote=' + str(self.recipe_vote)
