@@ -27,7 +27,7 @@ class Recipe(models.Model):
     def __str__(self):
         return self.title
 
-class Evalutation(models.Model):
+class Evaluation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     recipce_is_liked = models.BooleanField(default=False)

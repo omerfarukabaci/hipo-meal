@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .models import Recipe, Evalutation
+from .models import Recipe, Evaluation
 
 class RecipeListView(ListView):
     model = Recipe
@@ -57,7 +57,7 @@ def evaluate_recipe(request, pk):
     if request.method == 'POST':
         recipe = Recipe.objects.filter(pk=pk).first()
         user = request.user
-        evaluation = Evalutation.objects.filter(user=user, recipe=recipe).first()
+        evaluation = Evaluation.objects.filter(user=user, recipe=recipe).first()
         if evaluation:
             if request.POST['vote_or_like'] == 'like':
                 if evaluation.recipce_is_liked:
@@ -92,7 +92,7 @@ def evaluate_recipe(request, pk):
                 }
         else:
             if request.POST['vote_or_like'] == 'like':
-                evaluation = Evalutation(user=user, recipe=recipe, recipce_is_liked=True)
+                evaluation = Evaluation(user=user, recipe=recipe, recipce_is_liked=True)
                 recipe.like_count += 1
                 recipe.save()
                 evaluation.save()
@@ -101,7 +101,7 @@ def evaluate_recipe(request, pk):
                 }
             elif 'vote' in request.POST['vote_or_like']:
                 vote = int(request.POST['vote_or_like'].split("_", 1)[1])
-                evaluation = Evalutation(user=user, recipe=recipe, recipe_vote=vote)
+                evaluation = Evaluation(user=user, recipe=recipe, recipe_vote=vote)
                 recipe.vote_points += vote
                 recipe.vote_count += 1
                 recipe.save()
