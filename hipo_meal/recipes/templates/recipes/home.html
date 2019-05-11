@@ -2,7 +2,7 @@
 
 {% block content %}
     {% for recipe in recipes %}
-    <div class="card mb-2">
+    <div class="card mb-2 card-sm" style="height: 500px; overflow: hidden;">
         <img class="card-img-top" src="{{ recipe.image.url }}">
         <div class="card-body">
             <h5 class="card-title">
