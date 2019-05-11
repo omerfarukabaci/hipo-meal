@@ -1,8 +1,14 @@
 from django.shortcuts import render
+from django.views.generic import ListView, DetailView, CreateView
 from .models import Recipe
 
-def home(request):
-    context = {
-        'recipes': Recipe.objects.all()
-    }
-    return render(request, 'recipes/home.html', context)
+class RecipeListView(ListView):
+    model = Recipe
+    template_name = 'recipes/home.html'
+    context_object_name = 'recipes'
+    ordering = ['-date_posted']
+    # paginate_by = 
+
+class RecipeDetailView(DetailView):
+    model = Recipe
+
