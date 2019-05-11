@@ -15,7 +15,7 @@ class RecipeDetailView(DetailView):
 
 class RecipeCreateView(LoginRequiredMixin, CreateView):
     model = Recipe
-    fields = ['title', 'content']
+    fields = ['title', 'content', 'image']
     template_name = 'recipes/recipe_create_form.html'
 
     def form_valid(self, form):

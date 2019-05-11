@@ -11,7 +11,7 @@ class Recipe(models.Model):
     vote_points = models.IntegerField(default=0)
     vote_count = models.IntegerField(default=0)
     like_count = models.IntegerField(default=0)
-    # Maybe add an image field here.
+    image = models.ImageField(default='default_recipe.png', upload_to='profile_pics')
 
     def get_absolute_url(self):
         return reverse('recipe-detail', kwargs={'pk': self.pk})

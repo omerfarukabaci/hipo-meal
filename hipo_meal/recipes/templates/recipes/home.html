@@ -3,7 +3,7 @@
 {% block content %}
     {% for recipe in recipes %}
     <div class="card mb-2">
-        <img class="card-img-top" src="" alt="Card image cap">
+        <img class="card-img-top" src="{{ recipe.image.url }}">
         <div class="card-body">
             <h5 class="card-title">
                 <a href="{% url 'recipe-detail' recipe.id %}"

@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="card">
-        <img class="card-img-top" src="" alt="Card image cap">
+        <img class="card-img-top" src="{{ recipe.image.url }}">
         <div class="card-body">
             <h5 class="card-title text-danger">{{ object.title }}</h5>
             <p class="card-text">{{ object.content }}</p>
@@ -14,7 +14,14 @@
                     {{ object.author }} on {{ object.date_posted|date:"F d, Y" }}
                 </small>
                 {% if object.author == user %}
-                aaa
+                    <a href="{% url 'recipe-delete' object.id %}"
+                    class="btn btn-danger btn-sm my-1 ml-2 float-right">
+                    Delete
+                    </a>
+                    <a href="{% url 'recipe-update' object.id %}"
+                    class="btn btn-info btn-sm my-1 float-right">
+                    Update
+                    </a>
                 {% endif%}
             </p>
         </div>
