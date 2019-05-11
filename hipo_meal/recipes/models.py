@@ -18,7 +18,7 @@ class Recipe(models.Model):
     def get_absolute_url(self):
         return reverse('recipe-detail', kwargs={'pk': self.pk})
 
-    def save(self):
+    def save(self, force_insert=False, force_update=False, using=None):
         super().save()
         image = Image.open(self.image.path)
         image = ImageOps.fit(image, (500, 300), Image.ANTIALIAS)
