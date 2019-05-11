@@ -7,6 +7,7 @@ class RecipeListView(ListView):
     template_name = 'recipes/home.html'
     context_object_name = 'recipes'
     ordering = ['-date_posted']
+    paginate_by = 3
 
 class RecipeDetailView(DetailView):
     model = Recipe
