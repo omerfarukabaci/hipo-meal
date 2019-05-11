@@ -130,3 +130,5 @@ dmypy.json
 # Custom ignores
 
 /hipo_meal/media/*
+!hipo_meal/media/default_user_male.png
+!hipo_meal/media/default_recipe.png
