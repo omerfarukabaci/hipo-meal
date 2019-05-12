@@ -29,7 +29,6 @@
         <img class="card-img-top" src="{{ recipe.image.url }}">
         <div class="card-body">
             <h5 class="card-title text-danger">{{ object.title }}</h5>
-            <p class="card-text">{{ object.content }}</p>
             <p class="card-text">
                 <small class="text-muted">
                     By
@@ -37,12 +36,30 @@
                         style="height: 20px; width: 20px;">
                     {{ object.author }} on {{ object.date_posted|date:"F d, Y" }}
                 </small>
+                | <strong class="d-inline" style="font-size: 20px;">Difficulty: </strong>
+                {% if object.difficulty == "1" %}
+                <span class="text-success d-inline" style="font-size: 20px;">{{ object.get_difficulty_display }} &#x1f602;</span>
+                {% elif object.difficulty == "2" %}
+                <span class="text-primary d-inline" style="font-size: 20px;">{{ object.get_difficulty_display }} &#x1f642;</span>
+                {% elif object.difficulty == "3" %}
+                <span class="text-warning d-inline" style="font-size: 20px;">{{ object.get_difficulty_display }} &#x1f623;</span>
+                {% elif object.difficulty == "4" %}
+                <span class="text-danger d-inline" style="font-size: 20px;">{{ object.get_difficulty_display }} &#x1f92c;</span>
+                {% endif %}
+                <br>
+                <ul class="list-group w-50 my-2" style="align-self: center;">
+                    {% for ingredient in object.ingredients.all %}
+                    <li class="list-group-item list-group-item-primary">{{ ingredient.name }}</li>
+                    {% endfor %}
+                </ul>
+                {{ object.content }}
+            </p>
+            <p class="card-text">
                 <form method="POST">
                     {% csrf_token %}
                     <div href="{% url 'recipe-update' object.id %}"
                     class="btn btn-info btn-sm my-1 ml-2" onclick="evaluateRecipe('like');"
-                    style="cursor: pointer;"
-                    onclick="">
+                    style="cursor: pointer;">
                         Like <div class="bg-light text-dark" id="like-count">{{ object.like_count }}</div>
                     </div>
                     <div style="cursor: pointer;" class="btn btn-info btn-sm"
