@@ -5,7 +5,20 @@ from django.urls import reverse
 from django.core.validators import MaxValueValidator, MinValueValidator
 from PIL import Image, ImageOps
 
+class Ingredient(models.Model):
+    name = models.CharField(max_length=75)
+
+    def __str__(self):
+        return self.name
+
 class Recipe(models.Model):
+    DIFFICULTY_CHOICES = [
+        ("1", "Easy"),
+        ("2", "Medium"),
+        ("3", "Hard"),
+        ("4", "Brutal")
+    ]
+
     title = models.CharField(max_length=75)
     content = models.TextField()
     date_posted = models.DateTimeField(default=timezone.localtime)
@@ -13,6 +26,8 @@ class Recipe(models.Model):
     vote_points = models.IntegerField(default=0)
     vote_count = models.IntegerField(default=0)
     like_count = models.IntegerField(default=0)
+    difficulty = models.CharField(default='1', choices=DIFFICULTY_CHOICES, max_length=10)
+    ingredients = models.ManyToManyField(Ingredient)
     image = models.ImageField(default='default_recipe.png', upload_to='recipe_images')
 
     def get_absolute_url(self):
