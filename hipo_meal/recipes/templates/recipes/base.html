@@ -77,7 +77,15 @@
                 {% endblock content%}
             </div>
             <div class="col-6">
-                top ingredients
+                {% load recipes_custom_templates %}
+                {% get_top_ingredients as top_ingredients %}
+                <ul class="list-group w-50 float-right">
+                    {% for ingredient in top_ingredients %}
+                    <li class="list-group-item list-group-item-info">
+                        {{ingredient.name}} ({{ingredient.count}})
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>
