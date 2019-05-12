@@ -2,6 +2,30 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+    <script>
+        function addIngredient() {
+            var ingredientName = $("#ingredient-name").val();
+            $.ajax({
+                url: '/add_ingredient/?ingredient_name=' + ingredientName,
+                method: 'GET',
+                success: function (data) {
+                    if (data.ingredient_added) {
+                        $("#id_ingredients").append(
+                            $('<option />')
+                                .text(ingredientName)
+                                .val(data.ingredient_id)
+                        );
+                        $("#ingredient-name").val("");
+                    }
+                    else {
+                        $("#info-modal-message").html(data.error_message);
+                        $("#info-modal-label").html("Oops!");
+                        $("#info-modal").modal();
+                    }
+                }
+            });
+        }
+    </script>
     <div class="content-section">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
@@ -9,8 +33,22 @@
                 <legend class="border-bottom mb-4">Add a recipe</legend>
                 {{ form|crispy }}
             </fieldset>
+            <div class="input-group flex-nowrap mb-4">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="addon-wrapping">
+                        <i class="fas fa-pepper-hot" style="color:firebrick;"></i>
+                    </span>
+                </div>
+                <input type="text" class="form-control" placeholder="Ingredient Name"
+                aria-label="Ingredient" aria-describedby="addon-wrapping"
+                id="ingredient-name">
+                <button type="button" class="btn btn-secondary ml-2"
+                onclick="addIngredient();">
+                    Add Ingredient
+                </button>
+            </div>
             <div class="form-group">
-                <button class="btn btn-outline-info", type="submit">Add</button>
+                <button class="btn btn-outline-info" type="submit">Add</button>
             </div>
         </form>
     </div>
