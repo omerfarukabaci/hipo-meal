@@ -6,7 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from PIL import Image, ImageOps
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=75)
+    name = models.CharField(max_length=75, unique=True)
 
     def __str__(self):
         return self.name
