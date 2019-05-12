@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .models import Recipe, Evaluation
+from .models import Recipe, Evaluation, Ingredient
 
 class RecipeListView(ListView):
     model = Recipe
@@ -111,3 +111,20 @@ def evaluate_recipe(request, pk):
                     "updated_vote_ratio": int(recipe.vote_points/recipe.vote_count)
                 }
         return JsonResponse(response_data)
+
+def add_ingredient(request):
+    current_ingredient = Ingredient.objects.filter(name=request.GET["ingredient_name"])
+
+    if not current_ingredient:
+        ingredient = Ingredient(name=request.GET["ingredient_name"])
+        ingredient.save()
+        response_data = {
+            "ingredient_added": True,
+            "ingredient_id": ingredient.id
+        }
+    else:
+        response_data = {
+            "ingredient_added": False,
+            "error_message": "There is an ingredient with the same name."
+        }
+    return JsonResponse(response_data)
