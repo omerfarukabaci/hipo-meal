@@ -7,6 +7,7 @@ from PIL import Image, ImageOps
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=75, unique=True)
+    lookup_name = models.CharField(max_length=75, unique=True, default="ingredient_lookup_name")
 
     def __str__(self):
         return self.name
