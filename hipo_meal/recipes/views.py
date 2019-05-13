@@ -16,6 +16,7 @@ class RecipeListView(ListView):
     def get_queryset(self):
         if 'search_key' in self.request.GET:
             search_key_list = self.request.GET['search_key'].split()
+
             query = Q(ingredients__lookup_name__in=[
                     self.request.GET['search_key'].lower().replace(" ", "_")])
             for search_key in search_key_list:
@@ -23,6 +24,9 @@ class RecipeListView(ListView):
                 query = query | Q(content__icontains=search_key)
                 query = query | Q(ingredients__lookup_name__in=[search_key])
             return Recipe.objects.filter(query).distinct().order_by('-date_posted')
+        elif 'ingredient' in self.request.GET:
+            ingredient = Ingredient.objects.filter(name=self.request.GET['ingredient']).first()
+            return ingredient.recipe_set.all()
         else:
             return Recipe.objects.all().order_by('-date_posted')
 
