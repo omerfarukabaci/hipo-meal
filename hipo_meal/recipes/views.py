@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.db.models import Q
 from .models import Recipe, Evaluation, Ingredient
 
 class RecipeListView(ListView):
@@ -11,6 +12,19 @@ class RecipeListView(ListView):
     context_object_name = 'recipes'
     ordering = ['-date_posted']
     paginate_by = 3
+
+    def get_queryset(self):
+        if 'search_key' in self.request.GET:
+            search_key_list = self.request.GET['search_key'].split()
+            query = Q(ingredients__lookup_name__in=[
+                    self.request.GET['search_key'].lower().replace(" ", "_")])
+            for search_key in search_key_list:
+                query = query | Q(title__icontains=search_key)
+                query = query | Q(content__icontains=search_key)
+                query = query | Q(ingredients__lookup_name__in=[search_key])
+            return Recipe.objects.filter(query).distinct().order_by('-date_posted')
+        else:
+            return Recipe.objects.all().order_by('-date_posted')
 
 class RecipeDetailView(DetailView):
     model = Recipe
@@ -113,10 +127,12 @@ def evaluate_recipe(request, pk):
         return JsonResponse(response_data)
 
 def add_ingredient(request):
-    current_ingredient = Ingredient.objects.filter(name=request.GET["ingredient_name"])
+    lookup_name = request.GET["ingredient_name"].lower()
+    lookup_name = lookup_name.replace(" ", "_")
+    current_ingredient = Ingredient.objects.filter(lookup_name=lookup_name)
 
     if not current_ingredient:
-        ingredient = Ingredient(name=request.GET["ingredient_name"])
+        ingredient = Ingredient(name=request.GET["ingredient_name"], lookup_name=lookup_name)
         ingredient.save()
         response_data = {
             "ingredient_added": True,
