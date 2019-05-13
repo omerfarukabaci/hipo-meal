@@ -21,6 +21,9 @@
                         $("#vote-count").html('(' + data["updated_vote_count"] + ')');
                         $("#vote-ratio").html(data["updated_vote_ratio"] + '/5');
                     }
+                },
+                error: function(request, status, error){
+                    window.location.href = '/login';
                 }
             });
         }
