@@ -25,6 +25,15 @@
                 }
             });
         }
+
+        $(document).ready(function () {
+            $("#ingredient-name").on('keypress', function (event) {
+                if (event.which == 13) {
+                    event.preventDefault();
+                    addIngredient();
+                }
+            });
+        });
     </script>
     <div class="content-section">
         <form method="POST" enctype="multipart/form-data">
