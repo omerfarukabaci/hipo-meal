@@ -135,3 +135,11 @@ LOGIN_REDIRECT_URL = 'recipes-home'
 LOGIN_URL = 'login'
 
 django_heroku.settings(locals())
+
+# Rest Framework Settings
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
