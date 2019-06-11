@@ -1,11 +1,12 @@
 from rest_framework import serializers
-from rest_framework.response import Response
 from django.contrib.auth.models import User
+
 
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'username',)
+
 
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,6 +29,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
                 setattr(instance, attr, value)
         instance.save()
         return instance
+
 
 class LoginSerializer(serializers.ModelSerializer):
     class Meta:

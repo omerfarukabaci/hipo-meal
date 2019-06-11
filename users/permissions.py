@@ -2,6 +2,7 @@ from rest_framework.permissions import BasePermission
 
 SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS']
 
+
 class IsAuthenticatedAndOwner(BasePermission):
     message = 'Permission denied.'
 

@@ -28,7 +28,7 @@ class LoginView(views.APIView):
             user = User.objects.get(username=request.data["username"])
         except Exception:
             return views.Response(data="Not found.", status=404)
-        
+
         if not user.check_password(request.data["password"]):
             return views.Response(data="Authentication failed.", status=400)
 
