@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
 from rest_framework import generics, views
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import IsAuthenticated
 from . import serializers
 from . import permissions
+
 
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all()
@@ -13,10 +13,12 @@ class UserListCreateView(generics.ListCreateAPIView):
             return serializers.UserListSerializer
         return serializers.UserCreateSerializer
 
+
 class UserRetrieveView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserListSerializer
     permission_classes = (permissions.IsAuthenticatedAndOwner,)
+
 
 class LoginView(views.APIView):
     serializer_class = serializers.LoginSerializer
@@ -24,8 +26,8 @@ class LoginView(views.APIView):
     def post(self, request, **kwargs):
         try:
             user = User.objects.get(username=request.data["username"])
-        except:
-            return views.Response(data="User is not found.", status=404)
+        except Exception:
+            return views.Response(data="Not found.", status=404)
         
         if not user.check_password(request.data["password"]):
             return views.Response(data="Authentication failed.", status=400)
