@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_auth',
 ]
 
 MIDDLEWARE = [
@@ -136,7 +135,3 @@ LOGIN_REDIRECT_URL = 'recipes-home'
 LOGIN_URL = 'login'
 
 django_heroku.settings(locals())
-
-# Rest Auth
-
-OLD_PASSWORD_FIELD_ENABLED = True
