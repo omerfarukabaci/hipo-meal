@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from rest_framework import generics, views
-from rest_framework.authtoken.models import Token
 from . import serializers
 from . import permissions
 
@@ -22,25 +21,14 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
             return self.serializer_class(instance=instance, many=many, partial=partial)
 
 
-class LoginView(views.APIView):
+class LoginView(generics.GenericAPIView):
     serializer_class = serializers.LoginSerializer
 
     def post(self, request, **kwargs):
-        try:
-            user = User.objects.get(username=request.data["username"])
-        except Exception:
-            return views.Response(data="Not found.", status=404)
-
-        if not user.check_password(request.data["password"]):
-            return views.Response(data="Authentication failed.", status=400)
-
-        token = Token.objects.get(user=user)
-        data = {
-            'token': token.key,
-            'username': user.username
-        }
-
-        return views.Response(data=data, status=200)
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            return views.Response(serializer.data, status=200)
+        return views.Response(serializer.errors, status=400)
 
 
 class ChangePasswordView(generics.GenericAPIView):
