@@ -6,18 +6,14 @@ from . import serializers
 from . import permissions
 
 
-class UserListCreateView(generics.ListCreateAPIView):
+class UserCreateView(generics.CreateAPIView):
     queryset = User.objects.all()
-
-    def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return serializers.UserListSerializer
-        return serializers.UserCreateSerializer
+    serializer_class = serializers.UserCreateSerializer
 
 
-class UserRetrieveView(generics.RetrieveUpdateAPIView):
+class UserDetailView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
-    serializer_class = serializers.UserListSerializer
+    serializer_class = serializers.UserDetailSerializer
     permission_classes = (permissions.IsOwner,)
 
 
