@@ -47,7 +47,7 @@ class ChangePasswordView(generics.GenericAPIView):
     permission_classes = (permissions.IsOwner,)
 
     def post(self, request, **kwargs):
-        serializer = serializer_class(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             try:
                 password_validation.validate_password(serializer.data["new_password"])
