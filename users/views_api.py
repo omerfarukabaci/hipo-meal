@@ -1,4 +1,3 @@
-import django.contrib.auth.password_validation as password_validation
 from django.contrib.auth.models import User
 from rest_framework import generics, views
 from rest_framework.authtoken.models import Token
@@ -49,14 +48,8 @@ class ChangePasswordView(generics.GenericAPIView):
     permission_classes = (permissions.IsOwner,)
 
     def post(self, request, **kwargs):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            try:
-                password_validation.validate_password(serializer.data["new_password"])
-            except Exception as e:
-                return views.Response(data=e, status=400)
-            if not request.user.check_password(serializer.data["old_password"]):
-                return views.Response(data="Old password is incorrect.", status=400)
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
             serializer.save(request.user)
             return views.Response(serializer.data, status=200)
         return views.Response(serializer.errors, status=400)
