@@ -1,5 +1,6 @@
-from rest_framework import serializers
+import django.contrib.auth.password_validation as password_validation
 from django.contrib.auth.models import User
+from rest_framework import serializers
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -44,3 +45,18 @@ class ChangePasswordSerializer(serializers.Serializer):
     def save(self, user):
         user.set_password(self.data["new_password"])
         user.save()
+
+    def validate_new_password(self, value):
+        try:
+            password_validation.validate_password(value)
+        except Exception as e:
+            raise serializers.ValidationError(detail=e.messages)
+        return value
+
+    def validate_old_password(self, value):
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+        if not user.check_password(value):
+            raise serializers.ValidationError(detail="Wrong password.")
+        return value
