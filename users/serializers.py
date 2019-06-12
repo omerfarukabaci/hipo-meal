@@ -16,12 +16,14 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('email', 'username', 'password')
 
     def save(self):
-        user = User.objects.create_user(self.data["username"])
-        user.set_password(self.data["username"])
+        user = User(username=self.data["username"])
+        user.set_password(self.data["password"])
+
         if "email" in self.data:
             user.email = self.data["email"]
 
         user.save()
+        Token.objects.create(user=user)
 
 
 class LoginSerializer(serializers.Serializer):
