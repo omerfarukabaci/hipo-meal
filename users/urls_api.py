@@ -5,4 +5,5 @@ urlpatterns = [
     path('users/', views_api.UserListCreateView.as_view()),
     path('users/<int:pk>/', views_api.UserRetrieveView.as_view()),
     path('auth/login/', views_api.LoginView.as_view()),
+    path('auth/change-password/', views_api.ChangePasswordView.as_view()),
 ]
