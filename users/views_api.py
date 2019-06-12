@@ -18,7 +18,7 @@ class UserListCreateView(generics.ListCreateAPIView):
 class UserRetrieveView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserListSerializer
-    permission_classes = (permissions.IsAuthenticatedAndOwner,)
+    permission_classes = (permissions.IsOwner,)
 
 
 class LoginView(views.APIView):
@@ -44,7 +44,7 @@ class LoginView(views.APIView):
 
 class ChangePasswordView(generics.GenericAPIView):
     serializer_class = serializers.ChangePasswordSerializer
-    permission_classes = (permissions.IsAuthenticatedAndOwner,)
+    permission_classes = (permissions.IsOwner,)
 
     def post(self, request, **kwargs):
         serializer = serializer_class(data=request.data)
