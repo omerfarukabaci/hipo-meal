@@ -8,13 +8,6 @@ class UsersView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
 
-    def post(self, request, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return views.Response(serializer.data, status=200)
-        return views.Response(serializer.errors, status=400)
-
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
