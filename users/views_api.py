@@ -1,16 +1,13 @@
-from django.contrib.auth.models import User
 from rest_framework import generics, views
 from . import serializers
 from . import permissions
 
 
 class UsersView(generics.CreateAPIView):
-    queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
-    queryset = User.objects.all()
     serializer_class = serializers.UserDetailSerializer
     permission_classes = (permissions.IsOwner,)
 
