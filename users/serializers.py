@@ -26,6 +26,10 @@ class UserSerializer(serializers.ModelSerializer):
         Token.objects.create(user=user)
         return user
 
+    def validate_password(self, value):
+        password_validation.validate_password(value)
+        return value
+
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
