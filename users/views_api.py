@@ -17,12 +17,6 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
-    def get_serializer(self, instance=None, data=None, many=False, partial=False):
-        if self.request.method == "PUT" or self.request.method == "PATCH":
-            return self.serializer_class(instance=instance, data=data, many=many, partial=True)
-        elif self.request.method == "GET":
-            return self.serializer_class(instance=instance, many=many, partial=partial)
-
 
 class LoginView(generics.GenericAPIView):
     serializer_class = serializers.LoginSerializer
