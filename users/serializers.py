@@ -31,21 +31,18 @@ class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
 
-    def validate_username(self, value):
-        try:
-            User.objects.get(username=value)
-        except Exception as e:
-            raise serializers.ValidationError(detail=e.args[0])
-        return value
-
     def validate(self, data):
-        user = User.objects.get(username=data["username"])
-        if not user.check_password(data["password"]):
-            raise serializers.ValidationError(detail="Wrong password.")
+        try:
+            user = User.objects.get(username=data["username"])
+        except Exception as e:
+            raise serializers.ValidationError(detail={"username": e.args[0]})
 
-        token, created = Token.objects.get_or_create(user=data["user"])
+        if not user.check_password(data["password"]):
+            raise serializers.ValidationError(detail={"password": "Wrong password."})
+
+        token, created = Token.objects.get_or_create(user=user)
         data["user"] = user
-        data["token"] = token
+        data["token"] = token.key
         return data
 
     def to_representation(self, data):
