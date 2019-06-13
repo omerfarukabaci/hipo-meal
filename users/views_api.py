@@ -14,6 +14,9 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.UserDetailSerializer
     permission_classes = (permissions.IsOwner,)
 
+    def get_object(self):
+        return self.request.user
+
     def get_serializer(self, instance=None, data=None, many=False, partial=False):
         if self.request.method == "PUT" or self.request.method == "PATCH":
             return self.serializer_class(instance=instance, data=data, many=many, partial=True)
