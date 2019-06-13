@@ -15,15 +15,16 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('email', 'username', 'password')
 
-    def save(self):
-        user = User(username=self.data["username"])
-        user.set_password(self.data["password"])
+    def create(self, data):
+        user = User(username=data["username"])
+        user.set_password(data["password"])
 
-        if "email" in self.data:
-            user.email = self.data["email"]
+        if "email" in data:
+            user.email = data["email"]
 
         user.save()
         Token.objects.create(user=user)
+        return user
 
 
 class LoginSerializer(serializers.Serializer):
@@ -42,14 +43,15 @@ class LoginSerializer(serializers.Serializer):
         if not user.check_password(data["password"]):
             raise serializers.ValidationError(detail="Wrong password.")
 
+        token, created = Token.objects.get_or_create(user=data["user"])
         data["user"] = user
+        data["token"] = token
         return data
 
     def to_representation(self, data):
-        token = Token.objects.get(user=data["user"])
         return {
             'username': data["username"],
-            'token': token.key
+            'token': data["token"]
         }
 
 
