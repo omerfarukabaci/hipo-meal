@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 
+
 def register(request):
     if request.method == "POST":
         registration_form = UserRegisterForm(request.POST)
@@ -20,11 +21,13 @@ def register(request):
     }
     return render(request, 'users/register.html', context)
 
+
 @login_required
 def profile(request):
     if request.method == "POST":
         user_form = UserUpdateForm(request.POST, instance=request.user)
-        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        profile_form = ProfileUpdateForm(request.POST, request.FILES,
+                                         instance=request.user.profile)
 
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
