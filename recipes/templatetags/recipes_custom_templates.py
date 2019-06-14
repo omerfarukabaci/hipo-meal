@@ -3,6 +3,7 @@ from ..models import Ingredient
 
 register = template.Library()
 
+
 @register.simple_tag
 def get_top_ingredients():
     ingredients = Ingredient.objects.all()
@@ -13,8 +14,9 @@ def get_top_ingredients():
             'name': ingredient.name,
             'count': ingredient_usage_count
         })
-    top_ingredients_sorted = sorted(top_ingredients, key=lambda x:x['count'], reverse=True)
+    top_ingredients_sorted = sorted(top_ingredients, key=lambda x: x['count'], reverse=True)
     return top_ingredients_sorted[:5]
+
 
 @register.simple_tag
 def url_replace(request, field, value):

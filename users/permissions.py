@@ -1,5 +1,6 @@
 from rest_framework.permissions import IsAuthenticated
 
+
 class IsOwner(IsAuthenticated):
     message = 'Permission denied.'
 

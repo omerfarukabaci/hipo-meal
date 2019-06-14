@@ -5,12 +5,14 @@ from django.urls import reverse
 from django.core.validators import MaxValueValidator, MinValueValidator
 from PIL import Image, ImageOps
 
+
 class Ingredient(models.Model):
     name = models.CharField(max_length=75, unique=True)
     lookup_name = models.CharField(max_length=75, unique=True, default="ingredient_lookup_name")
 
     def __str__(self):
         return self.name
+
 
 class Recipe(models.Model):
     DIFFICULTY_CHOICES = [
@@ -42,6 +44,7 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class Evaluation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
