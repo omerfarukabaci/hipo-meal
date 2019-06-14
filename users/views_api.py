@@ -20,8 +20,8 @@ class LoginView(generics.GenericAPIView):
 
     def post(self, request, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            return views.Response(serializer.data, status=200)
+        serializer.is_valid(raise_exception=True)
+        return views.Response(serializer.data, status=200)
 
 
 class ChangePasswordView(generics.GenericAPIView):
@@ -30,6 +30,6 @@ class ChangePasswordView(generics.GenericAPIView):
 
     def post(self, request, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save(request.user)
-            return views.Response(serializer.data, status=200)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(request.user)
+        return views.Response(serializer.data, status=200)
