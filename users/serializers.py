@@ -1,5 +1,6 @@
 import django.contrib.auth.password_validation as password_validation
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
@@ -38,8 +39,8 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, data):
         try:
             user = User.objects.get(username=data["username"])
-        except Exception as e:
-            raise serializers.ValidationError(detail={"username": e.args[0]})
+        except ObjectDoesNotExist:
+            raise serializers.ValidationError(detail={"username": "User does not exist."})
 
         if not user.check_password(data["password"]):
             raise serializers.ValidationError(detail={"password": "Wrong password."})
