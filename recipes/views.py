@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.db.models import Q
 from .models import Recipe, Evaluation, Ingredient
+
 
 class RecipeListView(ListView):
     model = Recipe
@@ -30,8 +30,10 @@ class RecipeListView(ListView):
         else:
             return Recipe.objects.all().order_by('-date_posted')
 
+
 class RecipeDetailView(DetailView):
     model = Recipe
+
 
 class RecipeCreateView(LoginRequiredMixin, CreateView):
     model = Recipe
@@ -42,6 +44,7 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+
 class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Recipe
     fields = ['title', 'content', 'difficulty', 'image', 'ingredients']
@@ -50,13 +53,14 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
-    
+
     def test_func(self):
         recipe = self.get_object()
         if self.request.user == recipe.author:
             return True
         else:
             return False
+
 
 class RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Recipe
@@ -68,6 +72,7 @@ class RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         else:
             return False
+
 
 @login_required
 def evaluate_recipe(request, pk):
@@ -106,7 +111,7 @@ def evaluate_recipe(request, pk):
                 evaluation.save()
                 response_data = {
                     "updated_vote_count": recipe.vote_count,
-                    "updated_vote_ratio": int(recipe.vote_points/recipe.vote_count)
+                    "updated_vote_ratio": int(recipe.vote_points / recipe.vote_count)
                 }
         else:
             if request.POST['vote_or_like'] == 'like':
@@ -126,9 +131,10 @@ def evaluate_recipe(request, pk):
                 evaluation.save()
                 response_data = {
                     "updated_vote_count": recipe.vote_count,
-                    "updated_vote_ratio": int(recipe.vote_points/recipe.vote_count)
+                    "updated_vote_ratio": int(recipe.vote_points / recipe.vote_count)
                 }
         return JsonResponse(response_data)
+
 
 def add_ingredient(request):
     lookup_name = request.GET["ingredient_name"].lower()
