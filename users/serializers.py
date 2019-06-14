@@ -61,7 +61,7 @@ class ChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True, validators=[password_validation.validate_password])
 
     def save(self, user):
-        user.set_password(self.data["new_password"])
+        user.set_password(self.validated_data["new_password"])
         user.save()
 
     def validate_old_password(self, value):
