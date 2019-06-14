@@ -1,15 +1,14 @@
-from rest_framework import generics, views
+from rest_framework import generics, views, permissions
 from . import serializers
-from . import permissions
 
 
 class UsersView(generics.CreateAPIView):
     serializer_class = serializers.UserSerializer
+    permission_classes = (permissions.AllowAny,)
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.UserDetailSerializer
-    permission_classes = (permissions.IsOwner,)
 
     def get_object(self):
         return self.request.user
@@ -17,6 +16,7 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
 
 class LoginView(generics.GenericAPIView):
     serializer_class = serializers.LoginSerializer
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -26,7 +26,6 @@ class LoginView(generics.GenericAPIView):
 
 class ChangePasswordView(generics.GenericAPIView):
     serializer_class = serializers.ChangePasswordSerializer
-    permission_classes = (permissions.IsOwner,)
 
     def post(self, request, **kwargs):
         serializer = self.get_serializer(data=request.data)
