@@ -7,7 +7,6 @@ from django.urls import reverse
 class UserLoginViewTestCase(APITestCase):
     def setUp(self):
         self.username = "test_user"
-        self.email = "test_user@test.com"
         self.password = "testuserpass123"
         self.user = User.objects.create_user(self.username, self.email, self.password)
         self.token, created = Token.objects.get_or_create(user=self.user)
