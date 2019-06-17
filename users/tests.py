@@ -102,3 +102,6 @@ class ChangePasswordViewTestCase(APITestCase):
         response = self.client.post(reverse("api-users:change-password"), data={"old_password": "testuserpass123",
                                                                                 "new_password": "newpassword123"})
         self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse("api-users:login"), data={"username": self.username,
+                                                                      "password": "newpassword123"})
+        self.assertEqual(response.data['token'], self.token.key)
