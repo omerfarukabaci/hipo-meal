@@ -1,4 +1,3 @@
-from django.core.exceptions import ObjectDoesNotExist
 from .models import Recipe, Ingredient, User
 from rest_framework import serializers
 from pytz import timezone
@@ -21,13 +20,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         for ingredient_name in data["ingredients"]:
             lookup_name = ingredient_name.lower()
             lookup_name = lookup_name.replace(" ", "_")
-            try:
-                ingredient = Ingredient.objects.get(lookup_name=lookup_name)
-                recipe.ingredients.add(ingredient)
-            except ObjectDoesNotExist:
-                ingredient = Ingredient(name=ingredient_name, lookup_name=lookup_name)
-                ingredient.save()
-                recipe.ingredients.add(ingredient)
+            ingredient, created = Ingredient.objects.get_or_create(name=ingredient_name, lookup_name=lookup_name)
+            recipe.ingredients.add(ingredient)
 
         recipe.difficulty = str(data["difficulty"])
         recipe.save()
