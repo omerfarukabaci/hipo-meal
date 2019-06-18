@@ -1,10 +1,11 @@
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Recipe, Ingredient
+from .models import Recipe, Ingredient, User
 from rest_framework import serializers
 
 
 class RecipeSerializer(serializers.ModelSerializer):
     ingredients = serializers.ListField(child=serializers.CharField())
+    difficulty = serializers.IntegerField(min_value=1, max_value=4)
 
     class Meta:
         model = Recipe
@@ -27,6 +28,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                 ingredient.save()
                 recipe.ingredients.add(ingredient)
 
+        recipe.difficulty = str(data["difficulty"])
         recipe.save()
         return recipe
 
@@ -38,5 +40,10 @@ class RecipeSerializer(serializers.ModelSerializer):
         return {
             'title': data.title,
             'content': data.content,
-            'ingredients': ingredient_names
+            'difficulty': data.get_difficulty_display(),
+            'ingredients': ingredient_names,
+            'likes': data.like_count,
+            'votes': data.vote_points / data.vote_count if data.vote_count else 0,
+            'author': User.objects.get(id=data.author_id).username,
+            'date_posted': data.date_posted.strftime("%Y-%m-%d %H:%M"),
         }
