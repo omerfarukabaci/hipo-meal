@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Recipe, Ingredient, User
 from rest_framework import serializers
+from pytz import timezone
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -45,5 +46,5 @@ class RecipeSerializer(serializers.ModelSerializer):
             'likes': data.like_count,
             'votes': data.vote_points / data.vote_count if data.vote_count else 0,
             'author': User.objects.get(id=data.author_id).username,
-            'date_posted': data.date_posted.strftime("%Y-%m-%d %H:%M"),
+            'date_posted': data.date_posted.astimezone(timezone('Europe/Istanbul')).strftime("%Y-%m-%d %H:%M")
         }
