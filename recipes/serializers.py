@@ -31,7 +31,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         author = request.user
         recipe = Recipe(title=data["title"], content=data["content"],
-                        author=author)
+                        author=author, difficulty=str(data["difficulty"]))
         recipe.save()
         for ingredient in data["ingredients"]:
             lookup_name = ingredient["name"].lower()
@@ -39,8 +39,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             ingredient, created = Ingredient.objects.get_or_create(name=ingredient["name"], lookup_name=lookup_name)
             recipe.ingredients.add(ingredient)
 
-        recipe.difficulty = str(data["difficulty"])
-        recipe.save()
         return recipe
 
     def get_author(self, obj):
