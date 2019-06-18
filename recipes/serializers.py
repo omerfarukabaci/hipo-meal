@@ -20,7 +20,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = IngredientSerializer(many=True)
     difficulty = ChoiceField(choices=Recipe.DIFFICULTY_CHOICES)
     author = serializers.SerializerMethodField(source='get_author')
-    date_posted = serializers.DateTimeField(required=False)
+    date_posted = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Recipe
