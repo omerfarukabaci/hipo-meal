@@ -1,7 +1,7 @@
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
-class IsOwner(IsAuthenticatedOrReadOnly):
+class IsOwnerOrReadOnly(IsAuthenticatedOrReadOnly):
     message = 'Permission denied.'
     SAFE_METHODS = ('GET', 'HEAD', 'OPTIONS')
 
