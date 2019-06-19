@@ -1,5 +1,6 @@
 from rest_framework import generics, permissions
-from . import serializers, custom_permissions
+from . import serializers
+from core import permissions as custom_permissions
 from .models import Recipe
 
 
