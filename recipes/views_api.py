@@ -13,4 +13,4 @@ class RecipesView(generics.ListCreateAPIView):
 class RecipesDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Recipe.objects.all()
     serializer_class = serializers.RecipeSerializer
-    permission_classes = (custom_permissions.IsOwner,)
+    permission_classes = (custom_permissions.IsOwnerOrReadOnly,)
