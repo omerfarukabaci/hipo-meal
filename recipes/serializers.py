@@ -66,10 +66,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
             data.pop("ingredients", None)
 
-        for key, value in data.items():
-            if key != "ingredients" and hasattr(instance, key):
-                setattr(instance, key, data[key])
-
+        super().update(instance, data)
         instance.save()
         return instance
 
