@@ -32,6 +32,7 @@ class Recipe(models.Model):
     difficulty = models.CharField(default='1', choices=DIFFICULTY_CHOICES, max_length=10)
     ingredients = models.ManyToManyField(Ingredient)
     image = models.ImageField(default='default_recipe.png', upload_to='recipe_images')
+    is_hidden = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse('recipe-detail', kwargs={'pk': self.pk})
