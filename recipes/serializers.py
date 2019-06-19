@@ -67,7 +67,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             data.pop("ingredients", None)
 
         super().update(instance, data)
-        instance.save()
         return instance
 
     def get_author(self, obj):
