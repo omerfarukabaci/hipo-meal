@@ -50,10 +50,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                 ingredient, created = Ingredient.objects.get_or_create(name=ingredient["name"], lookup_name=lookup_name)
                 new_ingredients.add(ingredient)
 
-            current_ingredients = set()
-            for ingredient in instance.ingredients.all():
-                current_ingredients.add(ingredient)
-
+            current_ingredients = set(instance.ingredients.all())
             unchanging_ingredients = new_ingredients.intersection(current_ingredients)
             ingredients_to_add = new_ingredients.difference(unchanging_ingredients)
             ingredients_to_remove = current_ingredients.difference(unchanging_ingredients)
