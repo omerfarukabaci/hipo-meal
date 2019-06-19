@@ -41,5 +41,30 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         return recipe
 
+    def update(self, instance, data):
+        if "ingredients" in data:
+            new_ingredients = set()
+            for ingredient in data["ingredients"]:
+                lookup_name = ingredient["name"].lower()
+                lookup_name = lookup_name.replace(" ", "_")
+                ingredient, created = Ingredient.objects.get_or_create(name=ingredient["name"], lookup_name=lookup_name)
+                new_ingredients.add(ingredient)
+
+            current_ingredients = set(instance.ingredients.all())
+            unchanging_ingredients = new_ingredients.intersection(current_ingredients)
+            ingredients_to_add = new_ingredients.difference(unchanging_ingredients)
+            ingredients_to_remove = current_ingredients.difference(unchanging_ingredients)
+
+            if ingredients_to_add:
+                instance.ingredients.add(*ingredients_to_add)
+
+            if ingredients_to_remove:
+                instance.ingredients.remove(*ingredients_to_remove)
+
+            data.pop("ingredients", None)
+
+        super().update(instance, data)
+        return instance
+
     def get_author(self, obj):
         return obj.author.username
