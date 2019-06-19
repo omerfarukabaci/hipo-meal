@@ -55,11 +55,11 @@ class RecipeSerializer(serializers.ModelSerializer):
             ingredients_to_add = new_ingredients.difference(unchanging_ingredients)
             ingredients_to_remove = current_ingredients.difference(unchanging_ingredients)
 
-            for ingredient in ingredients_to_add:
-                instance.ingredients.add(ingredient)
+            if ingredients_to_add:
+                instance.ingredients.add(*ingredients_to_add)
 
-            for ingredient in ingredients_to_remove:
-                instance.ingredients.remove(ingredient)
+            if ingredients_to_remove:
+                instance.ingredients.remove(*ingredients_to_remove)
 
             data.pop("ingredients", None)
 
